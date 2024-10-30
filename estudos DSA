@@ -1,0 +1,113 @@
+import pandas as pd
+
+dados = {'Estado': ['Santa Catarina', 'Rio de Janeiro', 'Tocantins', 'Bahia', 'Minas Gerais'],
+         'Ano': [2004, 2005, 2006, 2007, 2008],
+         'Taxa Desemprego': [1.5,1.7,1.6,2.4,2.7]}
+
+from pandas import DataFrame
+
+df = DataFrame(dados) #Transforma o dicionário em uma tabela
+
+#print (df.head()) #O head imprimi as 5 primeiras linhas
+
+#print (DataFrame(dados, columns= ['Estado', 'Taxa Desemprego', 'Ano']))
+
+df2 = DataFrame(dados, 
+                columns=['Estado', 'Taxa Desemprego', 'Taxa Crescimento', 'Ano'],
+                index= ['estado1', 'estado2', 'estado3', 'estado4', 'estado5'])
+
+#print (df2)
+
+df2.describe()
+
+df2.isna()
+
+df2['Taxa Crescimento'].isna()
+
+import numpy as np
+
+df2 ['Taxa Crescimento'] = np.arange(5.)
+
+#print (df2.describe())
+
+#print (df2['estado2':'estado4'])
+
+#print(df2[df2 ['Taxa Desemprego'] < 2])
+
+dsa_df = pd.read_csv("dataset.csv")
+
+#print (dsa_df.head())
+
+#print (dsa_df.isna().sum())
+
+moda = dsa_df['Quantidade'].value_counts().index[0] #Index 0 pq é o primeiro valor, o que realmente mais aparece
+
+#print (moda)
+
+dsa_df['Quantidade'].fillna(value = moda, inplace= True)
+
+#print (dsa_df.head())
+
+#print (dsa_df.Valor_Venda.describe())
+
+#query = consulta
+
+df2 = dsa_df.query('229 < Valor_Venda < 10000') #Fazer uma consulta em todos as linhas da coluna Valor Venda que esteja entre 229 e 1000
+
+#print (df2.Valor_Venda.describe())
+
+df3 = df2.query('Valor_Venda >766')
+#print(df3.head())
+
+dsa_df.shape #Retorna o formato da tabela, sendo (linhas, colunas)
+
+dsa_df[dsa_df['Quantidade'].isin([5,7,9,11])] #Verifica na tabela, se na coluna Quantidade, teve vendas de 5, 7, 9 11 itens vendidos
+
+dsa_df[dsa_df['Quantidade'].isin([5,7,9,11])].shape #Aqui ele já faz a busca e tras quantas linhas tem na tabela com essa "regra"
+
+dsa_df[dsa_df['Quantidade'].isin([5,7,9,11])][:10] #Esse [:10] mostra as 10 primeiras linhas
+
+#print(dsa_df[ (dsa_df.Segmento == 'Home Office') & (dsa_df.Regiao == 'South') ].head()) # O operador lógico & (and), ambos precisam ser verdadeiros.
+
+#print(dsa_df[ (dsa_df.Segmento == 'Home Office') | (dsa_df.Regiao == 'South') ].tail()) # O operador lógico ou | (ou/or - simbolo chama pipe), onde 1 precisa ser vdd. Tail = calda.. tras os 5 últimos registros
+
+# != é diferente, == é igualdade
+
+#sample () é amostra, tras de maneira aleatória
+
+#groupby é agrupamento, mean é média
+
+#print (dsa_df[['Segmento', 'Regiao','Valor_Venda']].groupby(['Segmento','Regiao']).mean())
+
+#print (dsa_df[['Segmento', 'Regiao','Valor_Venda']].groupby(['Segmento','Regiao']).agg(['mean', 'std', 'count']))
+
+#print (dsa_df[dsa_df.Segmento.str.startswith('Con')].head()) #Filtramos o dataframe pela coluna Segmento com valores que iniciam com  as letras "Con"
+#Também podemos usar o endswith para filtrar tudo oque terminar com determinado combinação de letras
+
+#print (dsa_df.Segmento.value_counts())
+
+#A Coluna ID_Pedido é a junção do Pais - Ano - ID pedido      vamos aprender como separar essas informações - Split de strings
+
+#print(dsa_df ['ID_Pedido'].str.split('-').str[1].head())
+
+dsa_df['Ano'] = dsa_df ['ID_Pedido'].str.split('-').str[1] #Aqui estamos extraindo a informação do ano da coluna ID pedido e inserindo uma nova coluna com esses dados
+
+dsa_df.head()
+
+#str.lstrip é usado para remover dados de determinado objeto
+
+#replace, como o mesmo nome diz, ela substitui X por Y. ex.: 
+
+dsa_df ['ID_Cliente'] = dsa_df['ID_Cliente'].str.replace ('CG', 'AX')
+
+#print (dsa_df.head())
+
+#É possivel concatenar dados, e com isso criar nova coluna com essas informações. Segue exemplo:
+
+dsa_df['Pedido_Segmento'] = dsa_df['ID_Pedido'].str.cat(dsa_df['Segmento'], sep='-')
+
+#print (dsa_df.head())
+
+import sklearn
+
+print (sklearn.__version__)
